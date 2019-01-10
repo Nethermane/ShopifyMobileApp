@@ -1,0 +1,4 @@
+<full-backup-content>
+    <include domain="sharedpref" path="" />
+    <!--<exclude domain="database" path="collection.db"/>-->
+</full-backup-content>
