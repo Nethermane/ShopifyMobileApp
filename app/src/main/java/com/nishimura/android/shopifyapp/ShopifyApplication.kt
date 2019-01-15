@@ -10,16 +10,19 @@ import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 import com.nishimura.android.shopifyapp.data.db.CollectionDatabase
+import com.nishimura.android.shopifyapp.data.db.entity.ProductDao
 import com.nishimura.android.shopifyapp.data.network.*
 import com.nishimura.android.shopifyapp.data.repository.CollectionRepository
 import com.nishimura.android.shopifyapp.data.repository.CollectionRepositoryImpl
 import com.nishimura.android.shopifyapp.ui.collection.CollectionViewModelFactory
+import com.nishimura.android.shopifyapp.ui.products.ProductViewModelFactory
 
 class ShopifyApplication: Application(), KodeinAware {
     override val kodein = Kodein.lazy {
         import(androidXModule(this@ShopifyApplication))
         bind() from singleton { CollectionDatabase(instance()) }
         bind() from singleton { instance<CollectionDatabase>().collectionDao() }
+        bind() from singleton { instance<CollectionDatabase>().productDao() }
         bind<ConnectivityInterceptor>() with singleton {
             ConnectivityInterceptorImpl(
                 instance()
@@ -31,8 +34,9 @@ class ShopifyApplication: Application(), KodeinAware {
                 instance()
             )
         }
-        bind<CollectionRepository>() with singleton { CollectionRepositoryImpl(instance(), instance()) }
+        bind<CollectionRepository>() with singleton { CollectionRepositoryImpl(instance(), instance(), instance()) }
         bind() from provider { CollectionViewModelFactory(instance()) }
+        bind() from provider { ProductViewModelFactory(instance()) }
     }
 
     override fun onCreate() {

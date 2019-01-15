@@ -5,7 +5,7 @@ import com.nishimura.android.shopifyapp.data.db.entity.Image
 
 data class CollectionUnit(
     @ColumnInfo(name="title")
-    val title: String
-
-
+    val title: String,
+    @ColumnInfo(name="image_src")
+    val image_src: String
 )

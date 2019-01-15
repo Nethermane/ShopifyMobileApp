@@ -9,18 +9,21 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import com.nishimura.android.shopifyapp.data.network.response.CustomCollectionsResponse
+import com.nishimura.android.shopifyapp.data.network.response.ProductIDsResponse
 
 const val access_token = "c32313df0d0ef512ca64d5b336a0d7c6"
-const val page_num = "1"
 
-//https://shopicruit.myshopify.com/admin/custom_collections.json?page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6
+
 interface ShopifyApiService {
+    //https://shopicruit.myshopify.com/admin/collects.json?collection_id=68424466488&access_token=c32313df0d0ef512ca64d5b336a0d7c6
+    @GET("collects.json")
+    fun getProductIDsFromCollection(
+        @Query("collection_id") collectionId: String = ""
+    ): Deferred<ProductIDsResponse>
 
+    //https://shopicruit.myshopify.com/admin/custom_collections.json?page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6
     @GET("custom_collections.json")
-    fun getCollections(
-        @Query("page") pageNum: String = page_num,
-        @Query("access_token") accessToken: String = access_token
-    ): Deferred<CustomCollectionsResponse>
+    fun getCollections(): Deferred<CustomCollectionsResponse>
 
     companion object {
         operator fun invoke(connectivityInterceptor: ConnectivityInterceptor): ShopifyApiService {
@@ -28,8 +31,8 @@ interface ShopifyApiService {
                 val url = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("page", page_num)
-                    .addQueryParameter("access_token",
+                    .addQueryParameter(
+                        "access_token",
                         access_token
                     )
                     .build()
@@ -37,7 +40,7 @@ interface ShopifyApiService {
                     .newBuilder()
                     .url(url)
                     .build()
-                return@Interceptor  chain.proceed(request)
+                return@Interceptor chain.proceed(request)
             }
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(requestInterceptor)

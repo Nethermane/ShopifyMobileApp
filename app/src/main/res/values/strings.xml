@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ShopifyApp</string>
+    <string name="collection_name_placeholder">Collection Name</string>
 </resources>

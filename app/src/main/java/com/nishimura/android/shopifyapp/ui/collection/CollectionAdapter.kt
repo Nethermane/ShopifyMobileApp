@@ -1,5 +1,6 @@
 package com.nishimura.android.shopifyapp.ui.collection
 
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -15,9 +16,13 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import android.widget.TextView
 import android.content.Context.LAYOUT_INFLATER_SERVICE
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.LiveData
+import com.nishimura.android.shopifyapp.GlideApp
+import com.nishimura.android.shopifyapp.ui.products.ProductFragment
 
 
 internal class CollectionAdapter(
@@ -25,7 +30,8 @@ internal class CollectionAdapter(
 ) : RecyclerView.Adapter<CollectionAdapter.CollectionViewHolder>() {
 
     private var data: List<CollectionUnit> = emptyList()
-    private val layoutInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private val layoutInflater: LayoutInflater =
+        context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionViewHolder {
@@ -51,34 +57,32 @@ internal class CollectionAdapter(
         } else {
             // first initialization
             data = newData
-            Toast.makeText(context,data.size.toString(), Toast.LENGTH_SHORT).show()
+            notifyDataSetChanged()
         }
     }
 
     internal inner class CollectionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val collection_title: TextView = itemView.findViewById(R.id.collection_title)
-        // private val tvContent: TextView
-        //private val btnDelete: Button
-
-        init {
-
-            // tvContent = itemView.findViewById(R.id.tvContent)
-            //btnDelete = itemView.findViewById(R.id.btnDelete)
-        }
+        private val collectionTitleView: TextView = itemView.findViewById(R.id.collection_title)
+        private val collectionImageView: ImageView = itemView.findViewById(R.id.collection_image)
 
         fun bind(collectionUnit: CollectionUnit?) {
             if (collectionUnit != null) {
-                collection_title.text = collectionUnit.title
-//                tvContent.setText(post!!.getContent())
-//                btnDelete.setOnClickListener({ v -> onDeleteButtonClickListener?.onDeleteButtonClicked(post) })
-
+                collectionTitleView.text = collectionUnit.title
+                GlideApp.with(context).load(collectionUnit.image_src).into(collectionImageView)
+                collectionImageView.setOnClickListener {
+                    val activity = context as AppCompatActivity
+                    val myFragment = ProductFragment.newInstance()
+                    activity.supportFragmentManager.beginTransaction().replace(R.id.container, myFragment).addToBackStack(null).commit() }
             }
         }
 
     }
 
-    internal inner class CollectionDiffCallback(private val oldPosts: List<CollectionUnit>, private val newPosts: List<CollectionUnit>) :
+    internal inner class CollectionDiffCallback(
+        private val oldPosts: List<CollectionUnit>,
+        private val newPosts: List<CollectionUnit>
+    ) :
         DiffUtil.Callback() {
 
         override fun getOldListSize(): Int {

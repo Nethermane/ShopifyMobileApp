@@ -9,9 +9,9 @@ import com.nishimura.android.shopifyapp.data.db.unit.CollectionUnit
 import com.nishimura.android.shopifyapp.data.db.unit.ProductIdUnit
 
 @Dao
-interface CollectionDao {
+interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun upsert(collectionEntry: CustomCollectionEntry)
-    @Query("select * from custom_collection")
-    fun getCollectionTitle(): LiveData<List<CollectionUnit>>
+    fun upsert(collectionEntry: CollectEntry)
+    @Query("select * from product_query_result where collectionId = :collectionId")
+    fun getProductIdsFromCollection(collectionId: String = ""): LiveData<List<ProductIdUnit>>
 }
