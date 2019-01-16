@@ -23,6 +23,7 @@ class ShopifyApplication: Application(), KodeinAware {
         bind() from singleton { CollectionDatabase(instance()) }
         bind() from singleton { instance<CollectionDatabase>().collectionDao() }
         bind() from singleton { instance<CollectionDatabase>().productDao() }
+        bind() from singleton { instance<CollectionDatabase>().productIdDao() }
         bind<ConnectivityInterceptor>() with singleton {
             ConnectivityInterceptorImpl(
                 instance()
@@ -34,7 +35,7 @@ class ShopifyApplication: Application(), KodeinAware {
                 instance()
             )
         }
-        bind<CollectionRepository>() with singleton { CollectionRepositoryImpl(instance(), instance(), instance()) }
+        bind<CollectionRepository>() with singleton { CollectionRepositoryImpl(instance(), instance(), instance(), instance()) }
         bind() from provider { CollectionViewModelFactory(instance()) }
         bind() from provider { ProductViewModelFactory(instance()) }
     }

@@ -9,15 +9,19 @@ import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
 import com.nishimura.android.shopifyapp.data.db.entity.CollectionDao
 import com.nishimura.android.shopifyapp.data.db.entity.ProductDao
+import com.nishimura.android.shopifyapp.data.db.entity.ProductIdDao
 import com.nishimura.android.shopifyapp.data.db.unit.CollectionUnit
 import com.nishimura.android.shopifyapp.data.db.unit.ProductIdUnit
+import com.nishimura.android.shopifyapp.data.db.unit.ProductUnit
 import com.nishimura.android.shopifyapp.data.network.CollectionDataSource
 import com.nishimura.android.shopifyapp.data.network.response.CustomCollectionsResponse
 import com.nishimura.android.shopifyapp.data.network.response.ProductIDsResponse
+import com.nishimura.android.shopifyapp.data.network.response.ProductsResponse
 
 class CollectionRepositoryImpl(
     private val collectionDao: CollectionDao,
     private val collectionDataSource: CollectionDataSource,
+    private val productIdDao: ProductIdDao,
     private val productDao: ProductDao
 ) : CollectionRepository {
 
@@ -30,17 +34,27 @@ class CollectionRepositoryImpl(
         collectionDataSource.downloadedProductIDsResponse.observeForever { newProductId ->
             persistProductIds(newProductId)
         }
+        collectionDataSource.downloadProducts.observeForever { newProduct ->
+            persistProducts(newProduct)
+        }
     }
     override suspend fun getProductIDsFromCollectionID(collectionId: String): LiveData<List<ProductIdUnit>> {
         return withContext(Dispatchers.IO) {
             initProductIdData()
-            return@withContext productDao.getProductIdsFromCollection(collectionId)
+            return@withContext productIdDao.getProductIdsFromCollection(collectionId)
         }
     }
     override suspend fun getCollections(): LiveData<List<CollectionUnit>> {
         return withContext(Dispatchers.IO) {
             initCollectionData()
             return@withContext collectionDao.getCollectionTitle()
+        }
+    }
+    override suspend fun getProducts(collectionId: Long?): LiveData<List<ProductUnit>> {
+        return withContext(Dispatchers.IO) {
+            initProductIdData()
+            initProducts()
+            return@withContext productDao.getProductsFromId(collectionId)
         }
     }
 
@@ -57,6 +71,15 @@ class CollectionRepositoryImpl(
         //Global scope is viable here because this app will always be alive if this class is alive
         GlobalScope.launch(Dispatchers.IO) {
             for (collection in fetchedCollection.collects) {
+                productIdDao.upsert(collection)
+            }
+
+        }
+    }
+    private fun persistProducts(fetchedCollection: ProductsResponse) {
+        //Global scope is viable here because this app will always be alive if this class is alive
+        GlobalScope.launch(Dispatchers.IO) {
+            for (collection in fetchedCollection.products) {
                 productDao.upsert(collection)
             }
 
@@ -71,16 +94,24 @@ class CollectionRepositoryImpl(
         //Temp set always true
         if(isFetchedCurrentNeeded(ZonedDateTime.now().minusMinutes(31)))
             fetchCurrentProductIds()
-
+    }
+    private suspend fun initProducts() {
+        //Temp set always true
+        if(isFetchedCurrentNeeded(ZonedDateTime.now().minusMinutes(31)))
+            fetchProducts()
     }
     private suspend fun fetchCurrentCollection() {
         //Gets data then updates it, observed in init
         collectionDataSource.fetchCurrentCollection()
     }
+    private suspend fun fetchProducts() {
+        collectionDataSource.fetchProducts()
+    }
     private suspend fun fetchCurrentProductIds() {
         //Gets data then updates it, observed in init
         collectionDataSource.fetchProductsFromCollectionId()
     }
+
     private fun isFetchedCurrentNeeded(lastFetchTime: ZonedDateTime): Boolean {
         val thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30)
         return lastFetchTime.isBefore(thirtyMinutesAgo)

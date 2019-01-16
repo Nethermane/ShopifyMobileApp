@@ -56,6 +56,13 @@ class MainFragment : ScopedFragment(), KodeinAware {
         collections_list.layoutManager = LinearLayoutManager(context!!)
         collections_list.adapter = adapter
         collections.observe(this@MainFragment, Observer {
+            if(it.isEmpty()) {
+                empty_view.visibility = View.VISIBLE
+                collections_list.visibility = View.GONE
+            } else {
+                empty_view.visibility = View.GONE
+                collections_list.visibility = View.VISIBLE
+            }
             adapter.setData(it)
         })
     }

@@ -16,9 +16,11 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import android.widget.TextView
 import android.content.Context.LAYOUT_INFLATER_SERVICE
+import android.os.Bundle
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.LiveData
 import com.nishimura.android.shopifyapp.GlideApp
@@ -65,14 +67,19 @@ internal class CollectionAdapter(
 
         private val collectionTitleView: TextView = itemView.findViewById(R.id.collection_title)
         private val collectionImageView: ImageView = itemView.findViewById(R.id.collection_image)
+        private val collectionBodyView: TextView = itemView.findViewById(R.id.collection_body)
 
         fun bind(collectionUnit: CollectionUnit?) {
             if (collectionUnit != null) {
                 collectionTitleView.text = collectionUnit.title
                 GlideApp.with(context).load(collectionUnit.image_src).into(collectionImageView)
-                collectionImageView.setOnClickListener {
+                collectionBodyView.text = collectionUnit.bodyHtml
+                itemView.setOnClickListener {
                     val activity = context as AppCompatActivity
                     val myFragment = ProductFragment.newInstance()
+                    val arguments = Bundle()
+                    arguments.putSerializable("collectionUnit", collectionUnit)
+                    myFragment.arguments = arguments
                     activity.supportFragmentManager.beginTransaction().replace(R.id.container, myFragment).addToBackStack(null).commit() }
             }
         }

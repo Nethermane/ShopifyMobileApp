@@ -10,11 +10,18 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import com.nishimura.android.shopifyapp.data.network.response.CustomCollectionsResponse
 import com.nishimura.android.shopifyapp.data.network.response.ProductIDsResponse
+import com.nishimura.android.shopifyapp.data.network.response.ProductsResponse
 
 const val access_token = "c32313df0d0ef512ca64d5b336a0d7c6"
 
 
 interface ShopifyApiService {
+    //https://shopicruit.myshopify.com/admin/products.json?access_token=c32313df0d0ef512ca64d5b336a0d7c6
+    @GET("products.json")
+    fun getProductsById(
+        @Query("ids") ids: Array<Long>? = null
+    ): Deferred<ProductsResponse>
+
     //https://shopicruit.myshopify.com/admin/collects.json?collection_id=68424466488&access_token=c32313df0d0ef512ca64d5b336a0d7c6
     @GET("collects.json")
     fun getProductIDsFromCollection(

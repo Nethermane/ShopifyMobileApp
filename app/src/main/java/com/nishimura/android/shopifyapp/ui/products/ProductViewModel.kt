@@ -9,11 +9,7 @@ class ProductViewModel(
 ) : ViewModel() {
     var collectionId: Long? = null
     val collection by lazyDeferred {
-        if(collectionId != null) {
-            collectionRepository.getProductIDsFromCollectionID(collectionId.toString())
-        } else {
-            collectionRepository.getProductIDsFromCollectionID()
-        }
+        collectionRepository.getProducts(collectionId)
 
     }
 }

@@ -5,13 +5,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.nishimura.android.shopifyapp.data.db.unit.CollectionUnit
-import com.nishimura.android.shopifyapp.data.db.unit.ProductIdUnit
+import com.nishimura.android.shopifyapp.data.db.unit.ProductUnit
 
 @Dao
 interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun upsert(collectionEntry: CollectEntry)
-    @Query("select * from product_query_result where collectionId = :collectionId")
-    fun getProductIdsFromCollection(collectionId: String = ""): LiveData<List<ProductIdUnit>>
+    fun upsert(collectionEntry: ProductEntry)
+    @Query("select * from products where id in (select productId from product_query_result where (collectionId = :collectionId OR :collectionId IS NULL))")
+    fun getProductsFromId(collectionId: Long?): LiveData<List<ProductUnit>>
 }

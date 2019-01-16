@@ -2,9 +2,11 @@ package com.nishimura.android.shopifyapp.data.db.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class ProductImage(
+data class ImageX(
     @SerializedName("admin_graphql_api_id")
     val adminGraphqlApiId: String,
+    @SerializedName("alt")
+    val alt: Any,
     @SerializedName("created_at")
     val createdAt: String,
     @SerializedName("height")
@@ -18,5 +20,9 @@ data class ProductImage(
     @SerializedName("src")
     val src: String,
     @SerializedName("updated_at")
-    val updatedAt: String
+    val updatedAt: String,
+    @SerializedName("variant_ids")
+    val variantIds: List<Any>,
+    @SerializedName("width")
+    val width: Int
 )

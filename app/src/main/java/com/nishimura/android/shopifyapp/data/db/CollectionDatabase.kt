@@ -4,18 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.nishimura.android.shopifyapp.data.db.entity.CollectEntry
-import com.nishimura.android.shopifyapp.data.db.entity.CollectionDao
-import com.nishimura.android.shopifyapp.data.db.entity.CustomCollectionEntry
-import com.nishimura.android.shopifyapp.data.db.entity.ProductDao
+import androidx.room.TypeConverters
+import com.nishimura.android.shopifyapp.data.db.entity.*
+import com.nishimura.android.shopifyapp.utilities.DataConverter
 
 @Database(
-    entities = [CustomCollectionEntry::class, CollectEntry::class],
-    version = 2
+    entities = [CustomCollectionEntry::class, CollectEntry::class, ProductEntry::class],
+    version = 8
 )
+@TypeConverters(DataConverter::class)
 abstract class CollectionDatabase : RoomDatabase() {
     abstract fun collectionDao(): CollectionDao
     abstract fun productDao(): ProductDao
+    abstract fun productIdDao(): ProductIdDao
     companion object {
         @Volatile private var instance: CollectionDatabase? = null
         private val LOCK = Any()

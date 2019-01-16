@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ShopifyApp</string>
     <string name="collection_name_placeholder">Collection Name</string>
+    <string name="collection_body_placeholder">Collection Body Placeholder</string>
+    <string name="no_data_available">No data available</string>
+    <string name="total_stock">Total Stock: %1$d</string>
 </resources>

@@ -1,8 +1,14 @@
 package com.nishimura.android.shopifyapp.data.db.entity
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
+import com.nishimura.android.shopifyapp.utilities.DataConverter
 
-data class Product(
+@Entity(tableName = "products")
+data class ProductEntry(
     @SerializedName("admin_graphql_api_id")
     val adminGraphqlApiId: String,
     @SerializedName("body_html")
@@ -11,14 +17,10 @@ data class Product(
     val createdAt: String,
     @SerializedName("handle")
     val handle: String,
-    @SerializedName("id")
+    @PrimaryKey
     val id: Long,
-    @SerializedName("productImage")
-    val productImage: ProductImage,
-    @SerializedName("productImages")
-    val productImages: List<ProductImage>,
-    @SerializedName("options")
-    val options: List<Option>,
+    @Embedded(prefix = "image_")
+    val image: ProductImage,
     @SerializedName("product_type")
     val productType: String,
     @SerializedName("published_at")
@@ -27,8 +29,6 @@ data class Product(
     val publishedScope: String,
     @SerializedName("tags")
     val tags: String,
-    @SerializedName("template_suffix")
-    val templateSuffix: Any,
     @SerializedName("title")
     val title: String,
     @SerializedName("updated_at")
