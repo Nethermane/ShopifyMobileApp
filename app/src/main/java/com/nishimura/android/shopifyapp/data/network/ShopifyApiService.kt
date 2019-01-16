@@ -1,5 +1,6 @@
 package com.nishimura.android.shopifyapp.data.network
 
+import android.util.Log
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
@@ -19,13 +20,13 @@ interface ShopifyApiService {
     //https://shopicruit.myshopify.com/admin/products.json?access_token=c32313df0d0ef512ca64d5b336a0d7c6
     @GET("products.json")
     fun getProductsById(
-        @Query("ids") ids: Array<Long>? = null
+        @Query("ids") ids: String
     ): Deferred<ProductsResponse>
 
     //https://shopicruit.myshopify.com/admin/collects.json?collection_id=68424466488&access_token=c32313df0d0ef512ca64d5b336a0d7c6
     @GET("collects.json")
     fun getProductIDsFromCollection(
-        @Query("collection_id") collectionId: String = ""
+        @Query("collection_id") collectionId: Long
     ): Deferred<ProductIDsResponse>
 
     //https://shopicruit.myshopify.com/admin/custom_collections.json?page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6
@@ -43,6 +44,7 @@ interface ShopifyApiService {
                         access_token
                     )
                     .build()
+                Log.e("MY URL", url.toString())
                 val request = chain.request()
                     .newBuilder()
                     .url(url)

@@ -5,7 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.nishimura.android.shopifyapp.data.db.entity.*
+import com.nishimura.android.shopifyapp.data.db.entity.dao.CollectionDao
+import com.nishimura.android.shopifyapp.data.db.entity.dao.ProductDao
+import com.nishimura.android.shopifyapp.data.db.entity.dao.ProductIdDao
+import com.nishimura.android.shopifyapp.data.db.entity.entry.CollectEntry
+import com.nishimura.android.shopifyapp.data.db.entity.entry.CustomCollectionEntry
+import com.nishimura.android.shopifyapp.data.db.entity.entry.ProductEntry
 import com.nishimura.android.shopifyapp.utilities.DataConverter
 
 @Database(

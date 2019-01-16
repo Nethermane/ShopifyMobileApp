@@ -1,4 +1,4 @@
-package com.nishimura.android.shopifyapp.data.db.entity
+package com.nishimura.android.shopifyapp.data.db.entity.entry
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

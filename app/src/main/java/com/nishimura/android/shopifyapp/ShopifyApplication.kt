@@ -10,7 +10,6 @@ import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 import com.nishimura.android.shopifyapp.data.db.CollectionDatabase
-import com.nishimura.android.shopifyapp.data.db.entity.ProductDao
 import com.nishimura.android.shopifyapp.data.network.*
 import com.nishimura.android.shopifyapp.data.repository.CollectionRepository
 import com.nishimura.android.shopifyapp.data.repository.CollectionRepositoryImpl

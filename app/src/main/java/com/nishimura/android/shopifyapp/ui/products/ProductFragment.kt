@@ -48,8 +48,7 @@ class ProductFragment : ScopedFragment(), KodeinAware {
 
     private fun bindUI() = launch {
         val adapter = ProductAdapter(context!!, currentCollection)
-        viewModel.collectionId = currentCollection.id
-        val collections = viewModel.collection.await()
+        val collections = viewModel.getCollection(currentCollection.id).await()
         collections_list.layoutManager = LinearLayoutManager(context!!)
         collections_list.adapter = adapter
         collections.observe(this@ProductFragment, Observer {

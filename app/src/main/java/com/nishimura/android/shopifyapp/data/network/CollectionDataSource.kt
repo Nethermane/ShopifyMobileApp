@@ -10,6 +10,7 @@ interface CollectionDataSource {
     val downloadedProductIDsResponse: LiveData<ProductIDsResponse>
     val downloadProducts: LiveData<ProductsResponse>
     suspend fun fetchCurrentCollection()
-    suspend fun fetchProductsFromCollectionId()
-    suspend fun fetchProducts()
+    suspend fun fetchProductIdFromCollectionId(collectionId: Long)
+    suspend fun fetchProducts(productIds: List<Long>)
+    suspend fun fetchProductsFromCollectionId(collectionId: Long)
 }

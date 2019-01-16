@@ -30,10 +30,10 @@ class CollectionDataSourceImpl(private val shopifyApiService: ShopifyApiService)
             Log.e("CollectionDataSourceImp", "no internet connection", e)
         }
     }
-    override suspend fun fetchProductsFromCollectionId() {
+    override suspend fun fetchProductIdFromCollectionId(collectionId: Long) {
         try {
             val fetchCollection = shopifyApiService
-                .getProductIDsFromCollection()
+                .getProductIDsFromCollection(collectionId)
                 .await()
             _downloadedProductIDsResponse.postValue(fetchCollection)
         }
@@ -42,10 +42,26 @@ class CollectionDataSourceImpl(private val shopifyApiService: ShopifyApiService)
         }
     }
 
-    override suspend fun fetchProducts() {
+    override suspend fun fetchProducts(productIds: List<Long>) {
         try {
             val fetchCollection = shopifyApiService
-                .getProductsById()
+                .getProductsById(productIds.joinToString(separator = ",") { it.toString() })
+                .await()
+            _downloadProducts.postValue(fetchCollection)
+            Log.e("I got this many", _downloadProducts.value?.products?.size.toString())
+        }
+        catch (e : IOException) {
+            Log.e("CollectionDataSourceImp", "no internet connection", e)
+        }
+    }
+    override suspend fun fetchProductsFromCollectionId(collectionId: Long) {
+        try {
+            val fetchProductIds = shopifyApiService
+                .getProductIDsFromCollection(collectionId)
+                .await()
+            _downloadedProductIDsResponse.postValue(fetchProductIds)
+            val fetchCollection = shopifyApiService
+                .getProductsById(fetchProductIds.collects.joinToString(separator = ",") { it.productId.toString() })
                 .await()
             _downloadProducts.postValue(fetchCollection)
         }
@@ -53,5 +69,6 @@ class CollectionDataSourceImpl(private val shopifyApiService: ShopifyApiService)
             Log.e("CollectionDataSourceImp", "no internet connection", e)
         }
     }
+
 
 }

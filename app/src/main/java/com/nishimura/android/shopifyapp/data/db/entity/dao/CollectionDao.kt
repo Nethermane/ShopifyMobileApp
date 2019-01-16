@@ -1,12 +1,12 @@
-package com.nishimura.android.shopifyapp.data.db.entity
+package com.nishimura.android.shopifyapp.data.db.entity.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.nishimura.android.shopifyapp.data.db.entity.entry.CustomCollectionEntry
 import com.nishimura.android.shopifyapp.data.db.unit.CollectionUnit
-import com.nishimura.android.shopifyapp.data.db.unit.ProductIdUnit
 
 @Dao
 interface CollectionDao {
